@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="bat.css">
+    <link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+</head>
+    <body style="font-family: sans-serif;" onload="startGame()">
+	<div class="contain">
+        <div class="leftpane">
+            <h1 id="exe">EXEPLORE 5.0</h1>
+            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="1000" data-pause="hover">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#myCarousel" data-slide-to="1"></li>
+                  <li data-target="#myCarousel" data-slide-to="2"></li>
+                  <li data-target="#myCarousel" data-slide-to="3"></li>
+                  <li data-target="#myCarousel" data-slide-to="4"></li>
+                  <li data-target="#myCarousel" data-slide-to="5"></li>
+                  <li data-target="#myCarousel" data-slide-to="6"></li>
+                  <li data-target="#myCarousel" data-slide-to="7"></li>
+                  <li data-target="#myCarousel" data-slide-to="8"></li>
+                </ol>
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active" id="two">
+                        <img src="../images/math1.png" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>2048</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="snakeG">
+                        <img src="../images/snake.jpg" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Snake</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="breakout">
+                        <img src="../images/index.png" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Break the Bars</h3>
+                         </div>
+                    </div>                  
+        
+                    <div class="item" id="hurdle">
+                        <img src="../images/abcd.jpg" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Hurdle Curdle</h3>
+                         </div>
+                    </div>  
+
+                    <div class="item" id="tetris">
+                        <img src="../images/tetris.png" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Tetris</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="cross">
+                        <img src="../images/cross.png" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Cross Moss</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="tower">
+                        <img src="../images/tower-of-hanoi.jpg" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Tower of Hanoi</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="hextris">
+                        <img src="../images/hetrix.jpg" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Hextris</h3>
+                         </div>
+                    </div>
+
+                    <div class="item" id="bob">
+                        <img src="../images/bob.png" width="460" height="450">
+                        <div class="carousel-caption">
+                            <h3>Bob the Builder</h3>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <h2 id="t"></h2>
+            <h2 id="tScore"></h2>
+        </div>
+
+        <div class="middlepane" id="canvas-block">
+            <h2 id="s">BREAK THE BARS</h2>
+                <canvas id="myCanvas1" width="500" height="500"></canvas>
+        </div>
+
+        <div class="rightpane">
+            <h2 id="maxScore"></h2><br>
+            <div>
+                <h2 id="score"></h2>
+            </div>
+            <button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.08)">ACCELERATE</button>
+            <div>
+                <h2 id="pa"></h2>
+            </div>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalHurdle">HELP</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalHurdle" role="dialog">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Instructions</h4>
+                </div>
+                <div class="modal-body">
+                  <p>The game's objective is to accelerate the box so that it does not collide with the moving bars.</p>
+                  <p>Press the 'Accelerate' button on the right with the mouse to lift the box.</p>
+                  <p>Just remember whenever you release the mouse button box will start coming down.</p>           
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    <script>
+
+    var canvas1 = document.getElementById("myCanvas1");
+    var ctx = canvas1.getContext("2d");
+    var scor = document.getElementById("score");
+    var m = document.getElementById('maxScore');
+    var pa = document.getElementById('pa');
+    var c;
+
+    var tScore = document.getElementById('tScore');
+        var x = JSON.parse(localStorage.getItem('highscores'));
+        if(x == undefined){
+            c = 0;
+        } else {
+            c = Number(x[0]);
+        }
+        var ts = Number(localStorage.getItem('maxMathScore')) + Number(localStorage.getItem('maxMathScoreS')) + Number(localStorage.getItem('maxMathScoreS2')) + Number(localStorage.getItem('maxMathScoreS3')) + Number(localStorage.getItem('maxMathScoreB')) + Number(localStorage.getItem('maxMathBob')) + Number(localStorage.getItem('maxMathBreak')) + Number(localStorage.getItem('maxMathBreak2')) + Number(localStorage.getItem('maxMathBreak3')) + Number(localStorage.getItem('maxMathCross')) + Number(localStorage.getItem('maxMathCross2')) + Number(localStorage.getItem('maxMathCross3')) + Number(localStorage.getItem('maxMathScoreT')) + Number(localStorage.getItem('maxMathScoreT1')) + Number(localStorage.getItem('maxMathScoreT2')) + Number(localStorage.getItem('maxMathScoreT3')) + c;
+        tScore.textContent = "Total Score: " + ts;
+
+if (localStorage.mathB >= 1)
+  m.textContent = "Max Score: " + localStorage.getItem('maxMathScoreB');
+    var myGamePiece;
+    var myObstacles = [];
+    var myScore;
+    	var ab;
+    var HEIGHT=270;
+
+    var myGameArea = {
+    //<img src="back.png" alt="sd" width=500 height=500>
+    start : function() {
+            this.interval = setInterval(updateGameArea, 60);
+            this.frameNo = 0;
+            window.addEventListener('keydown', function (e) {
+                myGameArea.key = e.keyCode;
+            })
+            window.addEventListener('keyup', function (e) {
+                myGameArea.key = false;
+            })
+        },
+        clear : function() {
+            ctx.clearRect(0, 0, 500, 500);
+        },
+        clearinterval : function() {
+            this.interval = clearInterval(this.interval);
+        }
+}   
+    startGame();
+    function startGame() {
+        myGamePiece = new component(30, 30, "blue", 10, 120);
+        myGamePiece.gravity = 0.03;
+        //myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    	ab = new component("50px", "Consolas", "blue", 100,200, "text");
+        myGameArea.start();
+    }
+
+function component(width, height, color, x, y, type) {
+    this.type = type;
+    this.score = 0;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;
+    this.gravity = 0;
+    this.gravitySpeed = 0;
+    this.update = function() {
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+    this.newPos = function() {
+        this.gravitySpeed += this.gravity;
+        this.x += this.speedX;
+         if( this.y + this.speedY + this.gravitySpeed>= 0)
+       { this.y += this.speedY + this.gravitySpeed;}
+        else
+{ this.gravitySpeed*=-0.05;  this.y += this.speedY + this.gravitySpeed;
+}
+        this.hitBottom();
+    }
+    this.hitBottom = function() {
+        var rockbottom = canvas1.height - this.height;
+        if (this.y > rockbottom) {
+            this.y = rockbottom;
+            this.gravitySpeed = 0;
+        }
+    }
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+            crash = false; 
+			
+        }
+        return crash;
+    }
+}
+
+function updateGameArea() {  	
+    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+    for (i = 0; i < myObstacles.length; i += 1) {
+        if (myGamePiece.crashWith(myObstacles[i])) {  ab.text="GAME OVER" ;
+        m.textContent = "Max Score: " + localStorage.getItem('maxMathScoreB');
+        pa.textContent = 'Play Again';
+        pa.addEventListener('click', function(){
+            window.location.reload();
+        });
+	       ab.update();
+            return;
+        } 
+    }
+
+    myGameArea.clear();
+    myGameArea.frameNo += 1;
+    if (localStorage.mathB) {
+                localStorage.mathB = Number(localStorage.mathB)+1;
+      } else {
+          localStorage.mathB = 1;
+      }
+      if (localStorage.mathB === 1) {
+        localStorage.setItem('maxMathScoreB', myGameArea.frameNo);    
+      } else {
+        var q = localStorage.getItem('maxMathScoreB');
+        if (myGameArea.frameNo > q)
+          localStorage.setItem('maxMathScoreB', myGameArea.frameNo);
+      }
+      m.textContent = "Max Score: " + localStorage.getItem('maxMathScoreB');
+    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+        x = canvas1.width;
+        minHeight = 20;
+        maxHeight = 200;
+        height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
+        minGap = 200;
+        maxGap = 300;
+        gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
+        myObstacles.push(new component(10, height, "red", x, 0));
+        myObstacles.push(new component(10, x - height - gap, "red", x, height + gap));
+    }
+    for (i = 0; i < myObstacles.length; i += 1) {
+        myObstacles[i].x += -1;
+        myObstacles[i].update();
+    }
+    scor.textContent="Score: " + myGameArea.frameNo;
+	
+    //myScore.update();
+    myGamePiece.newPos();
+    myGamePiece.update();
+}
+
+function everyinterval(n) {
+    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+    return false;
+}
+function accelerate(n) {
+    myGamePiece.gravity = n;
+}
+
+        document.querySelector('#two').addEventListener('click', function() {
+            window.document.location.href = '../2048/index.html';
+        });
+        document.querySelector('#snakeG').addEventListener('click', function() {
+            window.document.location.href = '../Snake/snake.html';
+        });
+        document.querySelector('#breakout').addEventListener('click', function() {
+            window.document.location.href = '../breakout/level1.html';
+        });
+        document.querySelector('#exe').addEventListener('click', function(){
+            window.document.location.href = '../main.html';
+        });
+        document.querySelector('#cross').addEventListener('click', function() {
+            window.document.location.href = '../cross/level1.html';
+        });
+        document.querySelector('#hurdle').addEventListener('click', function() {
+            window.document.location.href = 'mine.html';
+        });
+        document.querySelector('#tetris').addEventListener('click', function() {
+            window.document.location.href = '../tetris/index.html';
+        });
+        document.querySelector('#tower').addEventListener('click', function() {
+            window.document.location.href = '../towers-of-hanoi-master/level1.html';
+        });
+        document.querySelector('#hextris').addEventListener('click', function() {
+            window.document.location.href = '../hextris/index.html';
+        });
+        document.querySelector('#bob').addEventListener('click', function() {
+            window.document.location.href = '../bob_the_builder/index.html';
+        });
+
+        window.onload = function() {
+            var t = document.getElementById('t');
+            var idT = setInterval(function(){ 
+                var sec = localStorage.getItem('s');
+                var min = localStorage.getItem('m');
+                t.textContent = min + "m " + sec + "s";         
+                if(sec-- == 0){
+                    localStorage.setItem('s',59);
+                    localStorage.setItem('m',--min);
+                }
+                else 
+                    localStorage.setItem('s',sec);
+                if (min == 0 && sec == 0) {
+                        window.document.location.href = '../main.html';
+                }             
+            }, 1000);
+        };
+</script>
+<script type="text/javascript" src="../jquery.min.js"></script>
+    <script type="text/javascript" src="../bootstrap.min.js"></script>
+
+</body>
+</html>
